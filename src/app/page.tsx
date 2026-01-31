@@ -48,6 +48,8 @@ export default function HomePage() {
   }
 
   async function handleFindLocations() {
+    alert('Button clicked! ZIP: ' + zip)
+
     if (zip.length !== 5) {
       setError('Please enter a valid 5-digit ZIP code')
       return
@@ -55,14 +57,6 @@ export default function HomePage() {
 
     setLoading(true)
     setError('')
-
-    // Debug: check if Supabase URL is configured
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    if (!supabaseUrl) {
-      setError('Configuration error: Supabase not configured')
-      setLoading(false)
-      return
-    }
 
     const { data, error: dbError } = await supabase
       .from('zip_centroids')
