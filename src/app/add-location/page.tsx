@@ -110,7 +110,7 @@ export default function AddLocationPage() {
         lat: latNum,
         lng: lngNum,
         is_verified: false,
-      })
+      } as any)
       .select()
       .single()
 

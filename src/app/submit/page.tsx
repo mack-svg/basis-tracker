@@ -100,7 +100,7 @@ export default function SubmitPage() {
         futures_month: futuresMonth,
         basis_cents: basis,
         user_id: userId,
-      })
+      } as any)
 
     if (dbError) {
       setError('Failed to submit. Please try again.')
@@ -125,7 +125,7 @@ export default function SubmitPage() {
         .insert({
           user_id: userId,
           facility_id: facilityId,
-        })
+        } as any)
       setIsFacilitySaved(true)
     }
     setShowSavePrompt(false)
