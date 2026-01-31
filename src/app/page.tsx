@@ -48,8 +48,6 @@ export default function HomePage() {
   }
 
   async function handleFindLocations() {
-    alert('Button clicked! ZIP: ' + zip)
-
     if (zip.length !== 5) {
       setError('Please enter a valid 5-digit ZIP code')
       return
@@ -182,9 +180,6 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="p-4 text-center text-sm text-gray-400">
         Crowdsourced basis data
-        {!process.env.NEXT_PUBLIC_SUPABASE_URL && (
-          <div className="text-red-500 mt-2">⚠️ Database not configured</div>
-        )}
       </footer>
     </div>
   )
