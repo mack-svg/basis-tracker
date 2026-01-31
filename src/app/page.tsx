@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { getSavedZip, saveZip, getUserId } from '@/lib/user'
 import { supabase } from '@/lib/supabase'
 import type { Facility } from '@/types/database'
@@ -179,7 +180,10 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="p-4 text-center text-sm text-gray-400">
-        Crowdsourced basis data
+        <p>Crowdsourced basis data</p>
+        <Link href="/about" className="text-green-600 hover:underline mt-1 inline-block">
+          What is basis? How to use this app
+        </Link>
       </footer>
     </div>
   )
