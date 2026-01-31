@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { getUserId } from '@/lib/user'
 import type { Facility, Commodity, FuturesMonth } from '@/types/database'
-import { FUTURES_MONTHS } from '@/types/database'
+import { FUTURES_MONTHS, COMMODITIES } from '@/types/database'
 import Link from 'next/link'
 
 export default function SubmitPage() {
@@ -267,26 +267,20 @@ export default function SubmitPage() {
             Commodity
           </label>
           <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setCommodity('corn')}
-              className={`py-4 rounded-lg font-semibold text-lg transition-colors ${
-                commodity === 'corn'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-gray-100 text-gray-600'
-              }`}
-            >
-              Corn
-            </button>
-            <button
-              onClick={() => setCommodity('soybeans')}
-              className={`py-4 rounded-lg font-semibold text-lg transition-colors ${
-                commodity === 'soybeans'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-600'
-              }`}
-            >
-              Soybeans
-            </button>
+            {COMMODITIES.map(c => (
+              <button
+                key={c.value}
+                onClick={() => setCommodity(c.value)}
+                style={commodity === c.value ? { backgroundColor: c.color } : {}}
+                className={`py-4 rounded-lg font-semibold text-lg transition-colors ${
+                  commodity === c.value
+                    ? 'text-white'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
           </div>
         </div>
 

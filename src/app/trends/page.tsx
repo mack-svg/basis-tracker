@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import type { Facility, Commodity, FuturesMonth, CurrentBasis, BasisTrend, FacilityStats } from '@/types/database'
-import { FUTURES_MONTHS } from '@/types/database'
+import type { Facility, Commodity, FuturesMonth, TimeRange, CurrentBasis, BasisTrend, FacilityStats } from '@/types/database'
+import { FUTURES_MONTHS, COMMODITIES, TIME_RANGES } from '@/types/database'
 import Link from 'next/link'
 import BasisChart from '@/components/BasisChart'
 
@@ -19,6 +19,7 @@ export default function TrendsPage() {
 
   const [commodity, setCommodity] = useState<Commodity>(initialCommodity)
   const [futuresMonth, setFuturesMonth] = useState<FuturesMonth>(initialMonth)
+  const [timeRange, setTimeRange] = useState<TimeRange>('30d')
 
   const [currentBasis, setCurrentBasis] = useState<CurrentBasis | null>(null)
   const [trend, setTrend] = useState<BasisTrend[]>([])
@@ -34,7 +35,7 @@ export default function TrendsPage() {
     if (facilityId) {
       loadBasisData()
     }
-  }, [facilityId, commodity, futuresMonth])
+  }, [facilityId, commodity, futuresMonth, timeRange])
 
   async function loadFacility() {
     const { data } = await supabase
@@ -65,11 +66,13 @@ export default function TrendsPage() {
     }
 
     // Load trend
+    const selectedRange = TIME_RANGES.find(r => r.value === timeRange)
     const { data: trendData } = await supabase
       .rpc('get_basis_trend', {
         p_facility_id: facilityId!,
         p_commodity: commodity,
         p_futures_month: futuresMonth,
+        p_days: selectedRange?.days || 30,
       })
 
     if (trendData) {
@@ -157,40 +160,52 @@ export default function TrendsPage() {
 
       {/* Filters */}
       <div className="bg-white border-b p-4 space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => setCommodity('corn')}
-            className={`py-3 rounded-lg font-semibold transition-colors ${
-              commodity === 'corn'
-                ? 'bg-yellow-500 text-white'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            Corn
-          </button>
-          <button
-            onClick={() => setCommodity('soybeans')}
-            className={`py-3 rounded-lg font-semibold transition-colors ${
-              commodity === 'soybeans'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            Soybeans
-          </button>
+        <div className="grid grid-cols-4 gap-2">
+          {COMMODITIES.map(c => (
+            <button
+              key={c.value}
+              onClick={() => setCommodity(c.value)}
+              style={commodity === c.value ? { backgroundColor: c.color } : {}}
+              className={`py-2 rounded-lg font-semibold text-sm transition-colors ${
+                commodity === c.value
+                  ? 'text-white'
+                  : 'bg-gray-100 text-gray-600'
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
         </div>
 
-        <select
-          value={futuresMonth}
-          onChange={(e) => setFuturesMonth(e.target.value as FuturesMonth)}
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white"
-        >
-          {FUTURES_MONTHS.map(month => (
-            <option key={month.value} value={month.value}>
-              {month.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex gap-3">
+          <select
+            value={futuresMonth}
+            onChange={(e) => setFuturesMonth(e.target.value as FuturesMonth)}
+            className="flex-1 px-4 py-3 border border-gray-200 rounded-lg bg-white"
+          >
+            {FUTURES_MONTHS.map(month => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex bg-gray-100 rounded-lg p-1">
+            {TIME_RANGES.map(range => (
+              <button
+                key={range.value}
+                onClick={() => setTimeRange(range.value)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  timeRange === range.value
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600'
+                }`}
+              >
+                {range.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex-1 p-4 space-y-4">
@@ -242,7 +257,7 @@ export default function TrendsPage() {
         {trend.length > 0 ? (
           <div className="bg-white rounded-xl shadow-sm p-4">
             <h3 className="text-sm font-medium text-gray-700 mb-4">
-              30-Day Trend
+              {timeRange === '7d' ? '7-Day' : timeRange === '30d' ? '30-Day' : '1-Year'} Trend
             </h3>
             <BasisChart data={trend} commodity={commodity} />
           </div>

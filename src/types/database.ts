@@ -178,8 +178,16 @@ export type CurrentBasis = Database['public']['Functions']['get_current_basis'][
 export type BasisTrend = Database['public']['Functions']['get_basis_trend']['Returns'][0]
 export type FacilityStats = Database['public']['Functions']['get_facility_stats']['Returns'][0]
 
-export type Commodity = 'corn' | 'soybeans'
+export type Commodity = 'corn' | 'soybeans' | 'wheat' | 'sorghum'
 export type FuturesMonth = 'H' | 'K' | 'N' | 'U' | 'Z'
+export type TimeRange = '7d' | '30d' | '1y'
+
+export const COMMODITIES: { value: Commodity; label: string; color: string }[] = [
+  { value: 'corn', label: 'Corn', color: '#eab308' },
+  { value: 'soybeans', label: 'Soybeans', color: '#22c55e' },
+  { value: 'wheat', label: 'Wheat', color: '#f97316' },
+  { value: 'sorghum', label: 'Sorghum', color: '#ef4444' },
+]
 
 export const FUTURES_MONTHS: { value: FuturesMonth; label: string }[] = [
   { value: 'H', label: 'Mar (H)' },
@@ -187,4 +195,10 @@ export const FUTURES_MONTHS: { value: FuturesMonth; label: string }[] = [
   { value: 'N', label: 'Jul (N)' },
   { value: 'U', label: 'Sep (U)' },
   { value: 'Z', label: 'Dec (Z)' },
+]
+
+export const TIME_RANGES: { value: TimeRange; label: string; days: number }[] = [
+  { value: '7d', label: '7D', days: 7 },
+  { value: '30d', label: '30D', days: 30 },
+  { value: '1y', label: '1Y', days: 365 },
 ]

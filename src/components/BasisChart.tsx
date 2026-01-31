@@ -2,6 +2,7 @@
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import type { BasisTrend, Commodity } from '@/types/database'
+import { COMMODITIES } from '@/types/database'
 
 interface BasisChartProps {
   data: BasisTrend[]
@@ -15,7 +16,7 @@ export default function BasisChart({ data, commodity }: BasisChartProps) {
     reports: d.report_count,
   }))
 
-  const lineColor = commodity === 'corn' ? '#eab308' : '#22c55e'
+  const lineColor = COMMODITIES.find(c => c.value === commodity)?.color || '#22c55e'
 
   // Calculate Y axis domain with some padding
   const values = chartData.map(d => d.basis)
