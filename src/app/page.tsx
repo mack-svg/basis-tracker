@@ -56,6 +56,14 @@ export default function HomePage() {
     setLoading(true)
     setError('')
 
+    // Debug: check if Supabase URL is configured
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl) {
+      setError('Configuration error: Supabase not configured')
+      setLoading(false)
+      return
+    }
+
     const { data, error: dbError } = await supabase
       .from('zip_centroids')
       .select('*')
@@ -180,6 +188,9 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="p-4 text-center text-sm text-gray-400">
         Crowdsourced basis data
+        {!process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <div className="text-red-500 mt-2">⚠️ Database not configured</div>
+        )}
       </footer>
     </div>
   )
