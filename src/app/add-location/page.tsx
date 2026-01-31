@@ -121,7 +121,7 @@ export default function AddLocationPage() {
     }
 
     // Navigate to submit page for this new facility
-    router.push(`/submit?facilityId=${data.id}`)
+    router.push(`/submit?facilityId=${(data as any).id}`)
   }
 
   return (
